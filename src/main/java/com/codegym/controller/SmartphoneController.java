@@ -20,16 +20,19 @@ public class SmartphoneController {
     public ResponseEntity<Smartphone> createSmartphone(@RequestBody Smartphone smartphone) {
         return new ResponseEntity<>(smartphoneService.save(smartphone), HttpStatus.CREATED);
     }
+
+    @GetMapping
+    public ResponseEntity<Iterable<Smartphone>> allPhones() {
+        return new ResponseEntity<>(smartphoneService.findAll(), HttpStatus.OK);
+    }
+
     @GetMapping("/list")
     public ModelAndView getAllSmartphonePage() {
         ModelAndView modelAndView = new ModelAndView("/phones/list");
         modelAndView.addObject("smartphones", smartphoneService.findAll());
         return modelAndView;
     }
-    @GetMapping
-    public ResponseEntity<Iterable<Smartphone>> allPhones() {
-        return new ResponseEntity<>(smartphoneService.findAll(), HttpStatus.OK);
-    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Smartphone> deleteSmartphone(@PathVariable Long id) {
         Optional<Smartphone> smartphoneOptional = smartphoneService.findById(id);
