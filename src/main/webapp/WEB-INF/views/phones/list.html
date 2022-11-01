@@ -82,9 +82,35 @@
         event.preventDefault();
       });
     })
+    function searchUser(){
+      let producerSearch = document.getElementById("search").value;
+      $.ajax({
+        type: "GET",
+        //tên API
+        url: "/smartphones",
+        //xử lý khi thành công
+        success: function (data) {
+          // hien thi danh sach o day
+          let content = '    <tr>\n' +
+                  '        <td>Producer</td>\n' +
+                  '        <td>Model</td>\n' +
+                  '        <td>Price</td>\n' +
+                  '        <td>Delete</td>\n' +
+                  '    </tr>';
+          for (let i = 0; i < data.length; i++) {
+            if (data[i].producer.indexOf(producerSearch) != -1){
+              content += getSmartphone(data[i]);
+            }
+          }
+          document.getElementById('smartphoneList').innerHTML = content;
+        }
+      });
+    }
   </script>
 </head>
 <body>
+<label for="search"></label>
+<input type="text" id="search" placeholder="search" oninput="searchUser()">
 <form id="add-smartphone">
   <table>
     <tr>
