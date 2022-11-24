@@ -47,6 +47,7 @@
                   '        <td>Model</td>\n' +
                   '        <td>Price</td>\n' +
                   '        <td>Delete</td>\n' +
+                  '        <td>Edit</td>\n' +
                   '    </tr>';
           for (let i = 0; i < data.length; i++) {
             content += getSmartphone(data[i]);
@@ -58,7 +59,7 @@
 
     function getSmartphone(smartphone) {
       return `<tr><td >${smartphone.producer}</td><td >${smartphone.model}</td><td >${smartphone.price}</td>` +
-              `<td><a class="deleteSmartphone" href="${smartphone.id}">Delete</a></td></tr>`;
+              `<td><a class="deleteSmartphone" href="${smartphone.id}">Delete</a></td>` +`<td><a class="deleteSmartphone" href="${smartphone.id}">Delete</a></td></tr>`;
     }
 
     $(document).ready(function () {
@@ -105,6 +106,57 @@
           document.getElementById('smartphoneList').innerHTML = content;
         }
       });
+    }
+    function showEditForm(id) {
+      $.ajax({
+        type: "GET",
+        url: `/smartphones/${id}`,
+        success: function (smartphone) {
+          console.log(smartphone);
+          let model = smartphone.model;
+          let price = smartphone.price;
+          let producer = smartphone.producer;
+          let container = `<input type="hidden" id="edit-id" value="${id}"><table>
+                            <tr>
+                                <td>Producer:</td>
+                                <td><input type="text" id="edit-producer" value=${producer}></td>
+                           </tr>
+                           <tr>
+                               <td>Model</td>
+                               <td><input type="text" id="edit-model" value="${model}"></td>
+                            </tr>
+                           <tr>
+                                <td>Price</td>
+                               <td><input type="text" id="edit-price" value="${price}"></td>
+                           </tr>
+                       </table>`;
+          document.getElementById("edit-modal").innerHTML = container;
+        }
+      })
+    }
+
+    function editSmartphone() {
+      // let producer = $('#producer').val();
+      let id = $('#edit-id').val();
+      let producer = $('#edit-producer').val();
+      let model = $('#edit-model').val();
+      let price = $('#edit-price').val();
+      let smartphone = {
+        id: id,
+        producer: producer,
+        model: model,
+        price: price
+      }
+      $.ajax({
+        headers: {
+          'Accept': 'application/json',
+          'Content-type': 'application/json'
+        },
+        type: "PUT",
+        data: JSON.stringify(smartphone),
+        url: `/smartphones/${id}`,
+        success: successHandler
+      })
     }
   </script>
 </head>
